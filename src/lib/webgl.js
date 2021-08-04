@@ -137,10 +137,16 @@ function setUniforms(gl, locs) {
   gl.uniform2f(locs.uRes, gl.canvas.width, gl.canvas.height);
 }
 
+function enableBlending(gl) {
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+}
+
 function initWebgl(gl, fShaderSrc, image) {
   store.commit('setShaderErr', '');
 
   try {
+    enableBlending(gl);
     const program = createProgram(gl, fShaderSrc);
     const locs = getLocs(gl, program);
     setVertexArray(gl);
