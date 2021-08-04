@@ -1,6 +1,4 @@
 <template>
-  <img :src="img" ref="img" />
-
   <div class="output">
     <canvas ref="canvas" width="720" height="1280"></canvas>
   </div>
@@ -12,15 +10,12 @@ import initWebgl from '@/lib/webgl';
 import img from '@/assets/img.jpg';
 
 export default {
-  data: () => ({
-    img,
-  }),
-
-  mounted() {
+  async mounted() {
     const { canvas } = this.$refs;
     const gl = canvas.getContext('webgl2');
 
-    initWebgl(gl, this.$store.state.code, this.$refs.img);
+    const image = await this.loadImage();
+    initWebgl(gl, this.$store.state.code, image);
 
     function draw(time) {
       gl.uniform1f(gl.locs.uTime, time / 1000);
@@ -31,9 +26,20 @@ export default {
 
     window.addEventListener('keydown', (event) => {
       if (event.code === 'Enter' && event.altKey) {
-        initWebgl(gl, this.$store.state.code, this.$refs.img);
+        initWebgl(gl, this.$store.state.code, image);
       }
     });
+  },
+
+  methods: {
+    loadImage() {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = img;
+      });
+    },
   },
 };
 </script>
@@ -50,9 +56,5 @@ canvas {
   max-width: 90%;
   margin: auto;
   background-color: black;
-}
-
-img {
-  display: none;
 }
 </style>
