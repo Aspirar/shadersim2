@@ -51,7 +51,6 @@ export default {
 }
 
 canvas {
-  border: 4px solid rgba(0, 0, 0, .3);
   max-height: 90%;
   max-width: 90%;
   margin: auto;
