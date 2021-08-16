@@ -18,7 +18,8 @@ export default {
     initWebgl(gl, this.$store.state.code, image);
 
     function draw(time) {
-      gl.uniform1f(gl.locs.uTime, time / 1000);
+      gl.uniform1f(gl.locs.time, time / 1000);
+      gl.uniform1f(gl.locs.progress, time / (1000 * 30));
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       requestAnimationFrame(draw);
     }

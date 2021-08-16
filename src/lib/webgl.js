@@ -1,21 +1,20 @@
 import store from '@/store/index';
 
 function getVShaderSrc() {
-  return `#version 300 es
-    precision highp float;
+  return `precision highp float;
 
-    uniform vec2 uRes;
+    uniform mediump vec2 u_resolution;
 
-    in vec2 aPos;
-    in vec2 aTex;
+    attribute vec2 aPos;
+    attribute vec2 aTex;
 
-    out vec2 vPos;
-    out vec2 vTex;
+    varying vec2 vPos;
+    varying vec2 vTextureCoord;
 
     void main() {
+      gl_Position = vec4((aPos / u_resolution) * 2. - 1., 0., 1.);
       vPos = aPos;
-      vTex = aTex;
-      gl_Position = vec4((aPos / uRes) * 2. - 1., 0., 1.);
+      vTextureCoord = aTex;
     }
   `;
 }
@@ -57,8 +56,9 @@ function getLocs(gl, program) {
   const locs = {
     aPos: gl.getAttribLocation(program, 'aPos'),
     aTex: gl.getAttribLocation(program, 'aTex'),
-    uRes: gl.getUniformLocation(program, 'uRes'),
-    uTime: gl.getUniformLocation(program, 'uTime'),
+    u_resolution: gl.getUniformLocation(program, 'u_resolution'),
+    time: gl.getUniformLocation(program, 'time'),
+    progress: gl.getUniformLocation(program, 'progress'),
   };
   gl.locs = locs;
   return locs;
@@ -134,7 +134,7 @@ function initCanvas(gl) {
 }
 
 function setUniforms(gl, locs) {
-  gl.uniform2f(locs.uRes, gl.canvas.width, gl.canvas.height);
+  gl.uniform2f(locs.u_resolution, gl.canvas.width, gl.canvas.height);
 }
 
 function enableBlending(gl) {

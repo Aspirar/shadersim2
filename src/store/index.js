@@ -2,23 +2,21 @@ import { createStore } from 'vuex';
 
 export default createStore({
   state: {
-    code: `#version 300 es
-precision highp float;
+    code: `precision highp float;
 
-uniform float uTime;
-uniform vec2 uRes;
-uniform sampler2D uImage;
+uniform float time;
+uniform float progress;
+uniform mediump vec2 u_resolution;
+uniform sampler2D sTexture;
 
-in vec2 vTex;
-in vec2 vPos;
-
-out vec4 pixel;
+varying vec2 vTextureCoord;
+varying vec2 vPos;
 
 void main() {
-  vec2 uv = vPos / uRes;
-  uv.y *= uRes.y / uRes.x;
+  vec2 uv = vPos / u_resolution;
+  uv.y *= u_resolution.y / u_resolution.x;
 
-  pixel = texture(uImage, vTex);
+  gl_FragColor = texture2D(sTexture, vTextureCoord);
 }
 `,
 
